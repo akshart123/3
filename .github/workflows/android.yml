@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]   # runs workflow whenever you push to main branch
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -19,10 +19,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
-        run: ./gradlew assembleDebug
+        run: cd FillLightOverlayApp_withWrapper && ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: fill-light-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: FillLightOverlayApp_withWrapper/app/build/outputs/apk/debug/app-debug.apk
