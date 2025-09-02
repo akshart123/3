@@ -18,6 +18,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 33
+          build-tools: 33.0.2
+          ndk: 25.2.9519653
+
       - name: Make Gradle wrapper executable
         run: chmod +x FillLightOverlayApp_withWrapper/gradlew
 
