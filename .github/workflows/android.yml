@@ -21,19 +21,27 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x FillLightOverlayApp_withWrapper/gradlew
 
-      - name: Build with Gradle
-        run: cd FillLightOverlayApp_withWrapper && ./gradlew assembleDebug
+      - name: Build with Gradle (with proper error handling)
+        run: |
+          cd FillLightOverlayApp_withWrapper
+          # Run gradlew with proper error propagation
+          ./gradlew assembleDebug --no-daemon --console=plain
+          BUILD_STATUS=$?
+          if [ $BUILD_STATUS -ne 0 ]; then
+            echo "❌ Build failed with exit code $BUILD_STATUS"
+            exit $BUILD_STATUS
+          fi
+          echo "✅ Build successful"
 
-      # ADD THESE DEBUG STEPS TO SEE WHAT'S HAPPENING
-      - name: List generated APK files
-        run: find FillLightOverlayApp_withWrapper -name "*.apk" -type f
+      - name: Verify APK was created
+        run: |
+          echo "Checking for APK files..."
+          find FillLightOverlayApp_withWrapper -name "*.apk" -type f
+          echo "APK directory contents:"
+          ls -la FillLightOverlayApp_withWrapper/app/build/outputs/apk/ || echo "APK directory not found yet"
 
-      - name: Check if build directory exists
-        run: ls -la FillLightOverlayApp_withWrapper/app/build/outputs/apk/ || echo "APK directory not found"
-
-      # MODIFIED UPLOAD STEP - USE WILDCARDS
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: fill-light-apk
-          path: FillLightOverlayApp_withWrapper/app/build/outputs/apk/**/*.apk
+          path: FillLightOverlayApp_withWrapper/app/build/outputs/apk/debug/app-debug.apk
