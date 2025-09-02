@@ -18,6 +18,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Make Gradle wrapper executable
+        run: chmod +x FillLightOverlayApp_withWrapper/gradlew
+
       - name: Build with Gradle
         run: cd FillLightOverlayApp_withWrapper && ./gradlew assembleDebug
 
