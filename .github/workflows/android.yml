@@ -24,8 +24,16 @@ jobs:
       - name: Build with Gradle
         run: cd FillLightOverlayApp_withWrapper && ./gradlew assembleDebug
 
+      # ADD THESE DEBUG STEPS TO SEE WHAT'S HAPPENING
+      - name: List generated APK files
+        run: find FillLightOverlayApp_withWrapper -name "*.apk" -type f
+
+      - name: Check if build directory exists
+        run: ls -la FillLightOverlayApp_withWrapper/app/build/outputs/apk/ || echo "APK directory not found"
+
+      # MODIFIED UPLOAD STEP - USE WILDCARDS
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: fill-light-apk
-          path: FillLightOverlayApp_withWrapper/app/build/outputs/apk/debug/app-debug.apk
+          path: FillLightOverlayApp_withWrapper/app/build/outputs/apk/**/*.apk
